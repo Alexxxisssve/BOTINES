@@ -1,4 +1,4 @@
-window.onerror = function(msg, url, line) {
+Window.onerror = function(msg, url, line) {
     alert("⚠️ ERROR EN SCRIPT: " + msg + " (Línea: " + line + ")");
 };
 
@@ -74,7 +74,7 @@ let bonusSeleccionadoMultiplicador = 2;
 let costoEnergiaActual = 1000;
 let descripcionCanjeActual = "$1.000";
 
-// CONFIGURACIÓN DE TODAS LAS SKINS Y FONDOS LIBRES
+// CONFIGURACIÓN DE SKINS Y FONDOS
 const skinsConfig = {
   'inicio': { nombre: 'INICIO', imagen: 'pj_botines_inicio.png', targetImg: null, fondo: 'fondo_inicio.png', bonusValor: 1 },
   
@@ -107,16 +107,20 @@ const skinsConfig = {
   'gaucho_oro': { nombre: 'EL GAUCHO DE ORO', imagen: 'skin_gaucho_oro.png', targetImg: 'billete_10000_oro.png', fondo: 'fondo_gaucho_oro.png', bonusValor: 3000000, precioEstrellas: 150 },
   
   // Fondos Libres de Prestigio
-  'fondo_nuevo_gaucho': { nombre: 'EL GAUCHO', imagen: 'skin_gaucho.png', targetImg: null, fondo: 'fondo_nuevo_gaucho.jpg', bonusValor: 1 },
-  'fondo_nuevo_soldado': { nombre: 'MALVINAS (SOLDADO)', imagen: 'skin_soldado.png', targetImg: null, fondo: 'fondo_nuevo_soldado.jpg', bonusValor: 1 },
-  'fondo_nuevo_tanguero': { nombre: 'EL TANGUERO', imagen: 'Skin_tanguero.png', targetImg: null, fondo: 'fondo_nuevo_tanguero.jpg', bonusValor: 1 },
-  'fondo_nuevo_seleccion': { nombre: 'SELECCIÓN CAMPEÓN', imagen: 'skin_messi.png', targetImg: null, fondo: 'fondo_nuevo_seleccion.jpg', bonusValor: 1 },
-  'fondo_nuevo_asado': { nombre: 'EL ASADO', imagen: 'skin_gaucho.png', targetImg: null, fondo: 'fondo_nuevo_asado.jpg', bonusValor: 1 },
-  'fondo_nuevo_truco': { nombre: 'PARTIDA DE TRUCO', imagen: 'skin_ciudadano.png', targetImg: null, fondo: 'fondo_nuevo_truco.jpg', bonusValor: 1 },
-  'fondo_nuevo_tren': { nombre: 'TREN / COLECTIVO', imagen: 'skin_gaucho.png', targetImg: null, fondo: 'fondo_nuevo_tren.jpg', bonusValor: 1 },
-  'fondo_nuevo_boliche': { nombre: 'EL BOLICHE', imagen: 'skin_raperourbano.png', targetImg: null, fondo: 'fondo_nuevo_boliche.jpg', bonusValor: 1 },
-  'fondo_nuevo_kiosco': { nombre: 'MAXIKIOSCO', imagen: 'skin_boca.png', targetImg: null, fondo: 'fondo_nuevo_kiosco.jpg', bonusValor: 1 },
-  'fondo_nuevo_colectivo': { nombre: 'COLECTIVO URBANO', imagen: 'skin_colective.png', targetImg: null, fondo: 'fondo_colectivo.jpg', bonusValor: 1 },
+  'fondo_nuevo_gaucho': { nombre: 'Fondo El Gaucho', imagen: 'fondo_nuevo_gaucho.jpg', targetImg: null, fondo: 'fondo_nuevo_gaucho.jpg', bonusValor: 1 },
+  'fondo_nuevo_soldado': { nombre: 'Fondo Malvinas', imagen: 'fondo_nuevo_soldado.jpg', targetImg: null, fondo: 'fondo_nuevo_soldado.jpg', bonusValor: 1 },
+  'fondo_nuevo_tanguero': { nombre: 'Fondo El Tanguero', imagen: 'fondo_nuevo_tanguero.jpg', targetImg: null, fondo: 'fondo_nuevo_tanguero.jpg', bonusValor: 1 },
+  'fondo_nuevo_seleccion': { nombre: 'Fondo Selección', imagen: 'fondo_nuevo_seleccion.jpg', targetImg: null, fondo: 'fondo_nuevo_seleccion.jpg', bonusValor: 1 },
+  'fondo_nuevo_asado': { nombre: 'Fondo El Asado', imagen: 'fondo_nuevo_asado.jpg', targetImg: null, fondo: 'fondo_nuevo_asado.jpg', bonusValor: 1 },
+  'fondo_nuevo_truco': { nombre: 'Fondo Truco', imagen: 'fondo_nuevo_truco.jpg', targetImg: null, fondo: 'fondo_nuevo_truco.jpg', bonusValor: 1 },
+  'fondo_nuevo_tren': { nombre: 'Fondo Tren', imagen: 'fondo_nuevo_tren.jpg', targetImg: null, fondo: 'fondo_nuevo_tren.jpg', bonusValor: 1 },
+  'fondo_nuevo_boliche': { nombre: 'Fondo Boliche', imagen: 'fondo_nuevo_boliche.jpg', targetImg: null, fondo: 'fondo_nuevo_boliche.jpg', bonusValor: 1 },
+  'fondo_nuevo_kiosco': { nombre: 'Fondo Maxikiosco', imagen: 'fondo_nuevo_kiosco.jpg', targetImg: null, fondo: 'fondo_nuevo_kiosco.jpg', bonusValor: 1 },
+  'fondo_nuevo_colectivo': { nombre: 'Fondo Colectivo', imagen: 'fondo_nuevo_colectivo.jpg', targetImg: null, fondo: 'fondo_nuevo_colectivo.jpg', bonusValor: 1 },
+
+  // Nuevas Skins de Terror con nombre de archivo exacto y precios en estrellas
+  'skin_jeyson': { nombre: 'jeyson', imagen: 'skin_jeyson.png', targetImg: null, fondo: 'fondo_jeyson.jpg', bonusValor: 1, precioEstrellas: 180 },
+  'skin_scream': { nombre: 'scream', imagen: 'skin_scream.png', targetImg: null, fondo: 'fondo.scream.jpg', bonusValor: 1, precioEstrellas: 150 },
 
   // Skins VIP (Estrellas)
   'skin_campeondelmundo': { nombre: 'BOTIN CAMPEON', imagen: 'skin_campeondelmundo.png', targetImg: null, fondo: 'fondo_campeondelmungo.jpg', bonusValor: 1, precioEstrellas: 500 },
@@ -278,7 +282,6 @@ function abrirRaspadita(nombre, costo, efPremio, estPremio, pozoPremio, probabil
     raspaditaEstrellasPremio = estPremio;
     raspaditaPozoPremio = pozoPremio;
     
-    // Si el Modo Suerte está activo, partimos la probabilidad a la mitad para que sea mucho más fácil ganar
     let divisor = modoSuerteActivo ? 3.0 : 1.5;
     let probabilidadAjustada = Math.max(2, Math.floor(probabilidadBase / divisor));
     
@@ -490,7 +493,6 @@ function verificarEstructuraBarraProgreso() {
   }
 }
 
-// LÓGICA DE COBRO DE ENERGÍA
 function canjearPlataEnergia() {
     if (dineroClicks >= 1000000) {
         costoEnergiaActual = 100000;
@@ -554,14 +556,12 @@ function aceptarEnergiaCustom() {
     alert(`⚡ ¡Energía recargada al máximo por ${descripcionCanjeActual}!`);
 }
 
-// COSTO SEPARADO PARA CLICS DOBLES
 function obtenerCostoBonusDoblesActual() {
     if (dineroClicks >= 1000000) return { costo: 100000, texto: "$100.000" };
     if (dineroClicks >= 100000) return { costo: 10000, texto: "$10.000" };
     return { costo: 1000, texto: "$1.000" };
 }
 
-// COSTO SEPARADO PARA CLICS TRIPLES
 function obtenerCostoBonusTriplesActual() {
     if (dineroClicks >= 10000000) return { costo: 2000000, texto: "$2 Millones" };
     if (dineroClicks >= 1000000) return { costo: 200000, texto: "$200.000" };
@@ -625,9 +625,6 @@ function aceptarBonusCustom() {
     }
 }
 
-// ==========================================
-// NUEVAS FUNCIONES: RECOMPENSA DIARIA Y MODO SUERTE
-// ==========================================
 function reclamarRecompensaDiaria() {
     let ultimaFecha = localStorage.getItem('botines_ultima_recompensa');
     let hoy = new Date().toDateString();
@@ -685,15 +682,11 @@ function activarModoSuerteRaspaditas() {
     alert("🍀 ¡MODO SUERTE ACTIVADO! Durante los próximos 30 segundos, tus chances de ganar en las raspaditas están duplicadas. ¡A aprovechar!");
 }
 
-// ==========================================
-// NÚCLEO DE CLICS Y AUTOMÁTICO CON AUDIO FLUIDO
-// ==========================================
 let acumuladorEnergeticoAuto = 0;
 
 function ejecutarAutoclick() {
     if (energy <= 0) return;
 
-    // Gasta 1 de energía cada 6 clics automáticos
     acumuladorEnergeticoAuto++;
     if (acumuladorEnergeticoAuto >= 6) {
         energy -= 1;
@@ -726,7 +719,6 @@ function ejecutarAutoclick() {
         }
     }
 
-    // Efecto visual de latido en la moneda
     const targetEl = document.getElementById('target-clic');
     if (targetEl) {
         targetEl.style.transition = 'transform 0.05s ease';
@@ -737,9 +729,9 @@ function ejecutarAutoclick() {
     }
 
     reproducirSonidoClicFluido();
-
     actualizarUI();
     chequearCondicionPrestigio();
+    verificarProgresoReferidoLocal();
 }
 
 function activarClicsDoblesSinCobro() {
@@ -814,24 +806,9 @@ function toggleMusica() {
 
 function obtenerValorClicNivel(indexNivel) {
     const nivelesBase = [
-        1.00,   
-        5.00,   
-        10.00,  
-        25.00,  
-        50.00,  
-        100.00, 
-        200.00, 
-        500.00, 
-        1000.00,
-        2000.00,
-        5000.00,
-        10000.00,
-        20000.00,
-        50000.00,
-        100000.00,
-        200000.00,
-        1000000.00,
-        2000000.00 
+        1.00, 5.00, 10.00, 25.00, 50.00, 100.00, 200.00, 500.00, 
+        1000.00, 2000.00, 5000.00, 10000.00, 20000.00, 50000.00, 
+        100000.00, 200000.00, 1000000.00, 2000000.00 
     ];
     
     let base = nivelesBase[indexNivel] || 1.00;
@@ -841,7 +818,8 @@ function obtenerValorClicNivel(indexNivel) {
     return base;
 }
 
-// Clic manual con el dedo
+let totalClicksRealizadosJugador = 0; 
+
 function hacerClic(event) {
     if (!musicStarted && !musicMuted) {
         bgMusic.play().then(() => { musicStarted = true; }).catch(e => {});
@@ -851,7 +829,8 @@ function hacerClic(event) {
     const confActual = skinsConfig[skinEquipada];
     const esBilleteDorardo = (confActual && confActual.bonusValor > 1);
 
-    energy -= 1; // Clic manual gasta 1 de energía
+    energy -= 1; 
+    totalClicksRealizadosJugador++;
 
     if (esBilleteDorardo) {
         dineroClicks += confActual.bonusValor;
@@ -886,9 +865,9 @@ function hacerClic(event) {
     }
 
     reproducirSonidoClicFluido();
-
     actualizarUI();
     chequearCondicionPrestigio();
+    verificarProgresoReferidoLocal();
 }
 
 function actualizarTargetGrafico() {
@@ -979,16 +958,16 @@ function iniciarPrestigio() {
     if (!modal || !grid) return;
 
     const listaFondosNuevos = [
-        { nombre: "El Gaucho", archivo: "fondo_nuevo_gaucho.jpg", idSkin: "fondo_nuevo_gaucho" },
-        { nombre: "Malvinas (Soldado)", archivo: "fondo_nuevo_soldado.jpg", idSkin: "fondo_nuevo_soldado" },
-        { nombre: "El Tanguero", archivo: "fondo_nuevo_tanguero.jpg", idSkin: "fondo_nuevo_tanguero" },
-        { nombre: "Selección Campeón", archivo: "fondo_nuevo_seleccion.jpg", idSkin: "fondo_nuevo_seleccion" },
-        { nombre: "El Asado", archivo: "fondo_nuevo_asado.jpg", idSkin: "fondo_nuevo_asado" },
-        { nombre: "Partida de Truco", archivo: "fondo_nuevo_truco.jpg", idSkin: "fondo_nuevo_truco" },
-        { nombre: "Tren / Colectivo", archivo: "fondo_nuevo_tren.jpg", idSkin: "fondo_nuevo_tren" },
-        { nombre: "El Boliche", archivo: "fondo_nuevo_boliche.jpg", idSkin: "fondo_nuevo_boliche" },
-        { nombre: "Maxikiosco", archivo: "fondo_nuevo_kiosco.jpg", idSkin: "fondo_nuevo_kiosco" },
-        { nombre: "Colectivo Urbano", archivo: "fondo_nuevo_colectivo.jpg", idSkin: "fondo_nuevo_colectivo" }
+        { nombre: "Fondo El Gaucho", archivo: "fondo_nuevo_gaucho.jpg", idSkin: "fondo_nuevo_gaucho" },
+        { nombre: "Fondo Malvinas", archivo: "fondo_nuevo_soldado.jpg", idSkin: "fondo_nuevo_soldado" },
+        { nombre: "Fondo El Tanguero", archivo: "fondo_nuevo_tanguero.jpg", idSkin: "fondo_nuevo_tanguero" },
+        { nombre: "Fondo Selección", archivo: "fondo_nuevo_seleccion.jpg", idSkin: "fondo_nuevo_seleccion" },
+        { nombre: "Fondo El Asado", archivo: "fondo_nuevo_asado.jpg", idSkin: "fondo_nuevo_asado" },
+        { nombre: "Fondo Truco", archivo: "fondo_nuevo_truco.jpg", idSkin: "fondo_nuevo_truco" },
+        { nombre: "Fondo Tren", archivo: "fondo_nuevo_tren.jpg", idSkin: "fondo_nuevo_tren" },
+        { nombre: "Fondo Boliche", archivo: "fondo_nuevo_boliche.jpg", idSkin: "fondo_nuevo_boliche" },
+        { nombre: "Fondo Maxikiosco", archivo: "fondo_nuevo_kiosco.jpg", idSkin: "fondo_nuevo_kiosco" },
+        { nombre: "Fondo Colectivo", archivo: "fondo_nuevo_colectivo.jpg", idSkin: "fondo_nuevo_colectivo" }
     ];
 
     let html = '';
@@ -1075,7 +1054,7 @@ function renderizarGaleria() {
             <img src="${conf.imagen}" alt="${conf.nombre}" style="${esDesbloqueado ? '' : 'filter: grayscale(100%) opacity(0.35);'}">
             <div class="skin-title">${conf.nombre}</div>
             <div style="background: ${esDesbloqueado ? (skinEquipada === id ? '#ffcc00' : '#28a745') : '#30363d'}; color: ${skinEquipada === id && esDesbloqueado ? '#000' : '#fff'}; padding: 4px; border-radius: 4px; font-size: 10px; font-weight: bold; width: 100%; text-align: center;">
-                ${esDesbloqueado ? (skinEquipada === id ? '✨ EQUIPADO' : '✔️ DESBLOQUEADO') : '🔒 BLOQUEADO'}
+                ${esDesbloqueado ? (skinEquipada === id ? '✨ EQUIPADO' : '✔️ DESBLOQUEADO') : (conf.precioEstrellas ? `⭐ ${conf.precioEstrellas}` : '🔒 BLOQUEADO')}
             </div>
         </div>
       `;
@@ -1087,13 +1066,30 @@ function renderizarGaleria() {
 }
 
 function equiparSkinDesdeGaleria(skinId) {
+  const conf = skinsConfig[skinId];
+  
   if (!skinsCompradas[skinId]) {
-    alert("⚠️ ¡Este fondo está bloqueado! Completá el juego hasta el Billete de $20.000 y hacé un prestigio para elegirlo de regalo gratis.");
-    return;
+    if (conf && conf.precioEstrellas) {
+      if (estrellas >= conf.precioEstrellas) {
+        if (confirm(`¿Querés desbloquear "${conf.nombre}" por ${conf.precioEstrellas} Estrellas ⭐?`)) {
+          estrellas -= conf.precioEstrellas;
+          skinsCompradas[skinId] = true;
+          actualizarUI();
+          equiparSkinDesdeGaleria(skinId);
+          alert(`🎉 ¡Felicitaciones! Desbloqueaste y equipaste "${conf.nombre}".`);
+        }
+        return;
+      } else {
+        alert(`⚠️ No tenés estrellas suficientes ⭐. Necesitás ${conf.precioEstrellas} estrellas para desbloquear a ${conf.nombre}. (Tenés ${estrellas})`);
+        return;
+      }
+    } else {
+      alert("⚠️ ¡Este fondo está bloqueado! Completá el juego hasta el Billete de $20.000 y hacé un prestigio para elegirlo de regalo gratis.");
+      return;
+    }
   }
   
   skinEquipada = skinId;
-  const conf = skinsConfig[skinId];
   
   const imgSkinActiva = document.getElementById('skin-activa');
   if (imgSkinActiva && conf && conf.imagen) {
@@ -1112,6 +1108,7 @@ function equiparSkinDesdeGaleria(skinId) {
       alert(`✨ ¡Fondo "${conf.nombre}" equipado con éxito!`);
   }
   cerrarPantallas();
+  verificarProgresoReferidoLocal(); 
 }
 
 function cerrarPantallas() {
@@ -1190,10 +1187,10 @@ function intentarComprarSkin(skinId, nombreSkin, precioEstrellasParam, precioPes
         skinsCompradas[skinId] = true;
         actualizarUI();
         equiparSkinDesdeGaleria(skinId);
+        alert(`🎉 ¡Felicitaciones! Compraste "${nombreSkin}" con tus estrellas.`);
         return;
       } else {
-        const precioARS = precioPesosLemonParam || '1502.48';
-        mostrarModalPagoWeb(nombreSkin, precioARS);
+        alert(`⚠️ No tenés estrellas suficientes ⭐. Necesitás ${costoEstrellas} estrellas para comprar a ${nombreSkin}. (Tenés ${estrellas})`);
         return;
       }
     }
@@ -1277,4 +1274,54 @@ function intentarRetirarPozo() {
     }
     let montoRetiro = score;
     mostrarModalPagoWeb("Retiro de Pozo Acumulado", montoRetiro.toLocaleString('es-AR', { minimumFractionDigits: 2, maximumFractionDigits: 2 }));
+}
+
+// ==========================================
+// LÓGICA DE REFERIDOS INTEGRADA
+// ==========================================
+let cantidadReferidosCompletados = parseInt(localStorage.getItem('botines_cant_referidos') || '0');
+
+function abrirModalReferidos() {
+    const modal = document.getElementById('modal-referidos');
+    if (modal) {
+        let codigoUsuarioRef = usuarioId.replace('#', '');
+        let linkBase = window.location.href.split('?')[0];
+        let linkCompleto = `${linkBase}?ref=${codigoUsuarioRef}`;
+        
+        document.getElementById('input-link-referido').value = linkCompleto;
+        document.getElementById('contador-referidos').innerText = cantidadReferidosCompletados;
+        modal.style.display = 'flex';
+    }
+}
+
+function cerrarModalReferidos() {
+    const modal = document.getElementById('modal-referidos');
+    if (modal) modal.style.display = 'none';
+}
+
+function copiarLinkReferido() {
+    const inputLink = document.getElementById('input-link-referido');
+    inputLink.select();
+    inputLink.setSelectionRange(0, 99999);
+    navigator.clipboard.writeText(inputLink.value).then(() => {
+        alert("📋 ¡Enlace de referido copiado al portapapeles! Compártelo con tus amigos.");
+    }).catch(err => {
+        alert("⚠️ No se pudo copiar automáticamente. Selecciona y cópialo manualmente.");
+    });
+}
+
+function verificarProgresoReferidoLocal() {
+    const urlParams = new URLSearchParams(window.location.search);
+    let refCode = urlParams.get('ref');
+    
+    if (refCode && localStorage.getItem('botines_referido_completado') !== 'true') {
+        let skinDesbloqueadaExtra = Object.keys(skinsCompradas).length > 1; 
+        
+        if (totalClicksRealizadosJugador >= 300 && skinDesbloqueadaExtra) {
+            localStorage.setItem('botines_referido_completado', 'true');
+            estrellas += 10;
+            actualizarUI();
+            alert("🌟 ¡Felicitaciones! Cumpliste los requisitos del enlace de referido (300 clics + 1 skin). ¡Ganaste 10 Estrellas ⭐!");
+        }
+    }
 }
