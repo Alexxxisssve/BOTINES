@@ -79,7 +79,7 @@ const skinsConfig = {
   'inicio': { nombre: 'INICIO', imagen: 'pj_botines_inicio.png', targetImg: null, fondo: 'fondo_inicio.png', bonusValor: 1 },
   
   'skin_gaucho': { nombre: 'el gaucho argentino', imagen: 'skin_gaucho.png', targetImg: null, fondo: 'fondo_gaucho.jpg', bonusValor: 1 },
-  'skin_basurero': { nombre: 'recolector martin y martin', imagen: 'skin_basurero.png', targetImg: null, fondo: 'fondo_basurero.jpg', bonusValor: 1 },
+  skin_basurero': { nombre: 'recolector martin y martin', imagen: 'skin_basurero.png', targetImg: null, fondo: 'fondo_basurero.jpg', bonusValor: 1 },
   'skin_alumnapublica': { nombre: 'luci En la escuela', imagen: 'skin_alumnapublica.png', targetImg: null, fondo: 'fondo_alumnapublica.jpg', bonusValor: 1 },
   'skin_alumnopublico': { nombre: 'estudiante BOTIN', imagen: 'skin_alumnopublico.png', targetImg: null, fondo: 'fondo_alumnopublico.jpg', bonusValor: 1 },
   'skin_alumnaprivada': { nombre: 'luci de la siglo', imagen: 'skin_alumnaprivada.png', targetImg: null, fondo: 'fondo_alumnaprivada.jpg', bonusValor: 1 },
