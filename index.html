@@ -1,0 +1,698 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <title>Botines: El Juego Argento</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body onclick="iniciarAudioFondo()">
+
+    <audio id="sound-moneda" src="clic_moneda.mp3" preload="auto"></audio>
+    <audio id="sound-desbloqueo" src="desbloqueo.mp3" preload="auto"></audio>
+    <audio id="musica-fondo" src="proyecto botin.ogg" loop preload="auto"></audio>
+    
+    <audio id="sound-ganar-oro" src="ganar_oro.mp3" preload="auto"></audio>
+    <audio id="sound-ganar-monedadepozo" src="ganar_monedadepozo.mp3" preload="auto"></audio>
+    <audio id="sound-ganar-estrellas" src="ganar_estrellas.mp3" preload="auto"></audio>
+    <audio id="perder" src="perder.mp3" preload="auto"></audio>
+    <audio id="sound-cambio-moneda" src="cambiodemoneda.mp3" preload="auto"></audio>
+
+    <div class="game-container" style="background-image: url('fondo_inicio.png'); background-size: cover; background-position: center;">
+
+        <!-- === PANTALLA PRINCIPAL === -->
+        <div id="screen-juego">
+            
+            <div class="top-energy-bar">
+                <div class="user-profile-tag" onclick="cambiarNombreUsuario()" style="cursor: pointer;">
+                    👤 <span id="display-username">Jugador</span> (<span id="display-userid">#777</span>)
+                </div>
+                <div class="stats-top-group">
+                    <div>⚡ <span id="energia-texto">1000/1000</span></div>
+                    <div style="color: #ffd700; font-weight: bold;">⭐ <span id="display-estrellas">0</span></div>
+                    <button onclick="abrirModalReferidos()" title="Referidos" style="background: #1f6feb; color: #fff; border: 2px solid #00ffcc; padding: 3px 6px; border-radius: 6px; font-size: 12px; font-weight: bold; cursor: pointer; margin-left: 2px;">👥 Referidos</button>
+                    <button onclick="abrirModalInfo()" title="Información" style="background: #000000; color: #00FF00; border: 2px solid #00FF00; padding: 3px 6px; border-radius: 6px; font-size: 12px; font-weight: bold; cursor: pointer; margin-left: 2px;">ℹ️ Info</button>
+                    <button onclick="abrirModalAdmin()" title="Admin" style="background: transparent; border: none; font-size: 16px; cursor: pointer; padding: 0; margin-left: 2px;">⚙️</button>
+                </div>
+            </div>
+
+            <div class="header-logo-area">
+                <div class="pozo-box-main">
+                    <div id="pozo-main-display" class="pozo-main-amount">$0,00</div>
+                </div>
+            </div>
+
+            <div style="display: flex; gap: 6px; justify-content: center; margin: 4px 10px; z-index: 15;">
+                <button onclick="window.open('https://www.facebook.com/share/1Zbq1XpJhA/', '_blank')" style="background: #1877F2; color: white; border: none; padding: 5px 8px; border-radius: 6px; font-size: 10px; font-weight: bold; cursor: pointer; display: flex; align-items: center; gap: 3px;">f️⃣ Facebook</button>
+                <button onclick="window.open('https://chat.whatsapp.com/Gbv25i09yUB1m7SFlHeKDv?s=cl&p=a&mlu=4&ilr=4&iam=2', '_blank')" style="background: #25D366; color: white; border: none; padding: 5px 8px; border-radius: 6px; font-size: 10px; font-weight: bold; cursor: pointer; display: flex; align-items: center; gap: 3px;">💬 Comentarios</button>
+                <button onclick="window.open('https://chat.whatsapp.com/Gbv25i09yUB1m7SFlHeKDv?s=cl&p=a&mlu=4&ilr=4&iam=2', '_blank')" style="background: #28a745; color: white; border: none; padding: 5px 8px; border-radius: 6px; font-size: 10px; font-weight: bold; cursor: pointer; display: flex; align-items: center; gap: 3px;">📢 Novedades</button>
+            </div>
+
+            <div class="game-play-area">
+                <img id="target-clic" src="Moneda_1c.png" alt="Objetivo" class="coin-target" onclick="hacerClic(event)">
+                
+                <div class="character-podium">
+                    <img id="skin-activa" src="pj_botines_inicio.png" alt="Personaje">
+                    <img src="Podio.png" alt="Podio" class="podium-image">
+                </div>
+            </div>
+
+            <!-- === PANEL DE CREADOR (ADMIN) CORREGIDO === -->
+            <div id="admin-panel" style="display: none; background: #1a1a1a; border: 2px solid #ff4444; padding: 12px; border-radius: 10px; margin: 5px 10px; text-align: center; z-index: 50;">
+                <h4 style="color: #ff4444; margin: 0 0 8px 0; font-size: 13px;">🛡️ PANEL DE CREADOR (CONTROL RÁPIDO)</h4>
+                
+                <div style="display: flex; flex-direction: column; gap: 6px; margin-bottom: 8px;">
+                    <button onclick="adminDarEstrellas()" style="background: #ffd700; color: #000; border: none; padding: 8px; border-radius: 6px; font-weight: bold; font-size: 11px; cursor: pointer;">⭐ Dar 3.000 Estrellas Gratis</button>
+                    <button onclick="adminDarPlataClicks()" style="background: #28a745; color: #fff; border: none; padding: 8px; border-radius: 6px; font-weight: bold; font-size: 11px; cursor: pointer;">💵 Dar $500.000 para Pozo Clics (Principal)</button>
+                    <button onclick="adminDarPlataRetiro()" style="background: #1f6feb; color: #fff; border: none; padding: 8px; border-radius: 6px; font-weight: bold; font-size: 11px; cursor: pointer;">💰 Dar $500.000 para Retiro (Score)</button>
+                </div>
+
+                <button onclick="cerrarAdminPanel()" style="background: #444; color: white; border: none; padding: 6px; border-radius: 6px; font-weight: bold; font-size: 11px; cursor: pointer; width: 100%;">Cerrar Panel</button>
+            </div>
+
+            <!-- BOTONERA INFERIOR (4 BOTONES GRANDES) -->
+            <nav class="bottom-nav-original" style="display: flex; gap: 8px; padding: 8px 12px; justify-content: space-around;">
+                <button class="nav-btn-orig" onclick="abrirTienda()" style="flex: 1; padding: 10px 4px; font-size: 13px; display: flex; flex-direction: column; align-items: center; gap: 4px;">
+                    <img src="btn_tienda.png" alt="Tienda" style="width: 28px; height: 28px;"> Tienda
+                </button>
+                <button class="nav-btn-orig" onclick="abrirGaleria()" style="flex: 1; padding: 10px 4px; font-size: 13px; display: flex; flex-direction: column; align-items: center; gap: 4px;">
+                    <img src="btn_galeria.png" alt="Galería" style="width: 28px; height: 28px;"> Galería
+                </button>
+                <button class="nav-btn-orig" onclick="alert('🏆 Ranking Global Próximamente')" style="flex: 1; padding: 10px 4px; font-size: 13px; display: flex; flex-direction: column; align-items: center; gap: 4px;">
+                    <img src="btn_ranking.png" alt="Ranking" style="width: 28px; height: 28px;"> Ranking
+                </button>
+                <button class="nav-btn-orig" onclick="abrirAnuncios()" style="flex: 1; padding: 10px 4px; font-size: 13px; display: flex; flex-direction: column; align-items: center; gap: 4px;">
+                    <img src="btn_bonus.png" alt="Bonus" style="width: 28px; height: 28px;"> Bonus
+                </button>
+            </nav>
+        </div>
+
+        <!-- === PANTALLA DE LA TIENDA === -->
+        <div id="screen-tienda">
+            <button class="btn-volver" onclick="cerrarPantallas()">⬅️ Volver al Juego</button>
+
+            <header class="top-bar-tienda" style="text-align: center;">
+                <div style="font-size: 11px; color: #ffcc00; font-weight: bold;">POZO ACUMULADO (Retiro mínimo: $2.000)</div>
+                <div id="pozo-tienda-display" class="pozo-amount-tienda">$0,00</div>
+                <button onclick="intentarRetirarPozo()" style="background: #28a745; color: white; border: none; padding: 8px 15px; border-radius: 6px; font-weight: bold; font-size: 12px; margin-top: 8px; cursor: pointer; width: 100%;">💸 Retirar Dinero del Pozo</button>
+            </header>
+
+            <div class="progress-section">
+                <div class="progress-info">
+                    <span>Progreso al siguiente billete:</span>
+                    <strong id="porcentaje-texto">0%</strong>
+                </div>
+                <div class="progress-bar-bg">
+                    <div id="progress-bar-fill" class="progress-bar-fill"></div>
+                </div>
+                <div id="proximo-billete-info" class="next-unlock">🔒 Siguiente billete...</div>
+            </div>
+
+            <div class="store-tabs">
+                <button class="tab-btn active" onclick="filtrarTienda('todas')">Todas</button>
+                <button class="tab-btn" onclick="filtrarTienda('pesos')">Pesos ($)</button>
+                <button class="tab-btn" onclick="filtrarTienda('vip')">VIP (⭐)</button>
+                <button class="tab-btn" onclick="filtrarTienda('oro')">Oro (🪙)</button>
+                <button class="tab-btn" onclick="filtrarTienda('raspaditas')" style="background: #d9534f; color: white;">🎟️ Raspaditas</button>
+            </div>
+
+            <div class="skins-grid" id="skins-container">
+                <!-- SECCIÓN DE RASPADITAS -->
+                <div class="skin-card raspaditas" data-tipo="raspaditas">
+                    <img src="billete_100p.png" alt="Billete $100">
+                    <div class="skin-title">Billete $100</div>
+                    <div style="font-size: 8px; color: #ffcc00; margin: 2px 0; text-align: center; line-height: 1.2;">Premio: $1.500 | 75 Estrellas | $100k Pozo</div>
+                    <div style="display: flex; gap: 4px; width: 100%; margin-top: 4px;">
+                        <button onclick="comprarRaspaditaMP(500, 1500, 75, 100000, 5, 'https://mpago.la/1AeCngC')" style="background: #d9534f; color: #fff; padding: 6px 4px; border-radius: 6px; font-size: 10px; font-weight: bold; flex: 1; border: none; cursor: pointer;">🎟️ ($500)</button>
+                        <button onclick="intentarRaspadita('Billete $100', 500, 1500, 75, 100000, 5, 'estrellas', 15)" style="background: #e3b341; color: #000; padding: 6px 4px; border-radius: 6px; font-size: 10px; font-weight: bold; flex: 1; border: none; cursor: pointer;">⭐ (15)</button>
+                    </div>
+                </div>
+                <div class="skin-card raspaditas" data-tipo="raspaditas">
+                    <img src="billete_200p.png" alt="Billete $200">
+                    <div class="skin-title">Billete $200</div>
+                    <div style="font-size: 8px; color: #ffcc00; margin: 2px 0; text-align: center; line-height: 1.2;">Premio: $2.000 | 100 Estrellas | $150k Pozo</div>
+                    <div style="display: flex; gap: 4px; width: 100%; margin-top: 4px;">
+                        <button onclick="comprarRaspaditaMP(1000, 2000, 100, 150000, 5, 'https://mpago.li/1w2hNoj')" style="background: #d9534f; color: #fff; padding: 6px 4px; border-radius: 6px; font-size: 10px; font-weight: bold; flex: 1; border: none; cursor: pointer;">🎟️ ($1k)</button>
+                        <button onclick="intentarRaspadita('Billete $200', 1000, 2000, 100, 150000, 5, 'estrellas', 30)" style="background: #e3b341; color: #000; padding: 6px 4px; border-radius: 6px; font-size: 10px; font-weight: bold; flex: 1; border: none; cursor: pointer;">⭐ (30)</button>
+                    </div>
+                </div>
+                <div class="skin-card raspaditas" data-tipo="raspaditas">
+                    <img src="billete_500p.png" alt="Billete $500">
+                    <div class="skin-title">Billete $500</div>
+                    <div style="font-size: 8px; color: #ffcc00; margin: 2px 0; text-align: center; line-height: 1.2;">Premio: $3.000 | 120 Estrellas | $250k Pozo</div>
+                    <div style="display: flex; gap: 4px; width: 100%; margin-top: 4px;">
+                        <button onclick="comprarRaspaditaMP(2000, 3000, 120, 250000, 5, 'https://mpago.li/1s9HLR9')" style="background: #d9534f; color: #fff; padding: 6px 4px; border-radius: 6px; font-size: 10px; font-weight: bold; flex: 1; border: none; cursor: pointer;">🎟️ ($2k)</button>
+                        <button onclick="intentarRaspadita('Billete $500', 2000, 3000, 120, 250000, 5, 'estrellas', 60)" style="background: #e3b341; color: #000; padding: 6px 4px; border-radius: 6px; font-size: 10px; font-weight: bold; flex: 1; border: none; cursor: pointer;">⭐ (60)</button>
+                    </div>
+                </div>
+                <div class="skin-card raspaditas" data-tipo="raspaditas">
+                    <img src="billete_1000p.png" alt="Billete $1.000">
+                    <div class="skin-title">Billete $1.000</div>
+                    <div style="font-size: 8px; color: #ffcc00; margin: 2px 0; text-align: center; line-height: 1.2;">Premio: $5.000 | 150 Estrellas | $300k Pozo</div>
+                    <div style="display: flex; gap: 4px; width: 100%; margin-top: 4px;">
+                        <button onclick="comprarRaspaditaMP(3000, 5000, 150, 300000, 5, 'https://mpago.li/2XajTFi')" style="background: #d9534f; color: #fff; padding: 6px 4px; border-radius: 6px; font-size: 10px; font-weight: bold; flex: 1; border: none; cursor: pointer;">🎟️ ($3k)</button>
+                        <button onclick="intentarRaspadita('Billete $1.000', 3000, 5000, 150, 300000, 5, 'estrellas', 90)" style="background: #e3b341; color: #000; padding: 6px 4px; border-radius: 6px; font-size: 10px; font-weight: bold; flex: 1; border: none; cursor: pointer;">⭐ (90)</button>
+                    </div>
+                </div>
+                <div class="skin-card raspaditas" data-tipo="raspaditas">
+                    <img src="billete_2000p.png" alt="Billete $2.000">
+                    <div class="skin-title">Billete $2.000</div>
+                    <div style="font-size: 8px; color: #ffcc00; margin: 2px 0; text-align: center; line-height: 1.2;">Premio: $7.500 | 170 Estrellas | $500k Pozo</div>
+                    <div style="display: flex; gap: 4px; width: 100%; margin-top: 4px;">
+                        <button onclick="comprarRaspaditaMP(5000, 7500, 170, 500000, 10, 'https://mpago.li/2g2ehH2')" style="background: #d9534f; color: #fff; padding: 6px 4px; border-radius: 6px; font-size: 10px; font-weight: bold; flex: 1; border: none; cursor: pointer;">🎟️ ($5k)</button>
+                        <button onclick="intentarRaspadita('Billete $2.000', 5000, 7500, 170, 500000, 10, 'estrellas', 150)" style="background: #e3b341; color: #000; padding: 6px 4px; border-radius: 6px; font-size: 10px; font-weight: bold; flex: 1; border: none; cursor: pointer;">⭐ (150)</button>
+                    </div>
+                </div>
+                <div class="skin-card raspaditas" data-tipo="raspaditas">
+                    <img src="billete_10000p.png" alt="Billete $10.000">
+                    <div class="skin-title">Billete $10.000</div>
+                    <div style="font-size: 8px; color: #ffcc00; margin: 2px 0; text-align: center; line-height: 1.2;">Premio: $15.000 | 200 Estrellas | $750k Pozo</div>
+                    <div style="display: flex; gap: 4px; width: 100%; margin-top: 4px;">
+                        <button onclick="comprarRaspaditaMP(10000, 15000, 200, 750000, 10, 'https://mpago.li/2sYqLze')" style="background: #d9534f; color: #fff; padding: 6px 4px; border-radius: 6px; font-size: 10px; font-weight: bold; flex: 1; border: none; cursor: pointer;">🎟️ ($10k)</button>
+                        <button onclick="intentarRaspadita('Billete $10.000', 10000, 15000, 200, 750000, 10, 'estrellas', 300)" style="background: #e3b341; color: #000; padding: 6px 4px; border-radius: 6px; font-size: 10px; font-weight: bold; flex: 1; border: none; cursor: pointer;">⭐ (300)</button>
+                    </div>
+                </div>
+                <div class="skin-card raspaditas" data-tipo="raspaditas">
+                    <img src="billete_20000p.png" alt="Billete $20.000">
+                    <div class="skin-title">Billete $20.000</div>
+                    <div style="font-size: 8px; color: #ffcc00; margin: 2px 0; text-align: center; line-height: 1.2;">Premio: $25.000 | 250 Estrellas | $1M Pozo</div>
+                    <div style="display: flex; gap: 4px; width: 100%; margin-top: 4px;">
+                        <button onclick="comprarRaspaditaMP(15000, 25000, 250, 1000000, 10, 'https://mpago.li/2NAiHJp')" style="background: #d9534f; color: #fff; padding: 6px 4px; border-radius: 6px; font-size: 10px; font-weight: bold; flex: 1; border: none; cursor: pointer;">🎟️ ($15k)</button>
+                        <button onclick="intentarRaspadita('Billete $20.000', 15000, 25000, 250, 1000000, 10, 'estrellas', 450)" style="background: #e3b341; color: #000; padding: 6px 4px; border-radius: 6px; font-size: 10px; font-weight: bold; flex: 1; border: none; cursor: pointer;">⭐ (450)</button>
+                    </div>
+                </div>
+
+                <!-- PAQUETES DE ESTRELLAS -->
+                <div class="skin-card vip" data-tipo="vip" onclick="comprarPaqueteEstrellas(50, '1500')">
+                    <img src="estrella_pack.png" alt="50 Estrellas">
+                    <div class="skin-title">Pack 50 ⭐</div>
+                    <div class="price-badge-stars">$1.500 ARS</div>
+                </div>
+                <div class="skin-card vip" data-tipo="vip" onclick="comprarPaqueteEstrellas(100, '3000')">
+                    <img src="estrella_pack.png" alt="100 Estrellas">
+                    <div class="skin-title">Pack 100 ⭐</div>
+                    <div class="price-badge-stars">$3.000 ARS</div>
+                </div>
+                <div class="skin-card vip" data-tipo="vip" onclick="comprarPaqueteEstrellas(200, '6000')">
+                    <img src="estrella_pack.png" alt="200 Estrellas">
+                    <div class="skin-title">Pack 200 ⭐</div>
+                    <div class="price-badge-stars">$6.000 ARS</div>
+                </div>
+                <div class="skin-card vip" data-tipo="vip" onclick="comprarPaqueteEstrellas(300, '9000')">
+                    <img src="estrella_pack.png" alt="300 Estrellas">
+                    <div class="skin-title">Pack 300 ⭐</div>
+                    <div class="price-badge-stars">$9.000 ARS</div>
+                </div>
+
+                <!-- TICKETS SEMANALES -->
+                <div class="skin-card pesos" data-tipo="pesos" data-skin-id="ticket_2000" onclick="abrirSelectorNumeros('Ticket $2.000', '2000', '1° Acierto: $10.000 | 2° Acierto: $4.000')">
+                    <img src="ticket_2000.png" alt="Ticket $2.000">
+                    <div class="skin-title">Ticket $2.000</div>
+                    <div style="font-size: 8px; color: #aaa; margin: 2px 0; text-align: center;">1°: $10.000 | 2°: $4.000</div>
+                    <div style="background: #1f6feb; color: #fff; padding: 6px; border-radius: 6px; font-size: 11px; font-weight: bold; width: 100%; text-align: center; margin-top: 4px;">📲 Comprar ($2.000)</div>
+                </div>
+                <div class="skin-card pesos" data-tipo="pesos" data-skin-id="ticket_4000" onclick="abrirSelectorNumeros('Ticket $4.000', '4000', '1° Acierto: $20.000 | 2° Acierto: $8.000')">
+                    <img src="ticket_4000.png" alt="Ticket $4.000">
+                    <div class="skin-title">Ticket $4.000</div>
+                    <div style="font-size: 8px; color: #aaa; margin: 2px 0; text-align: center;">1°: $20.000 | 2°: $8.000</div>
+                    <div style="background: #1f6feb; color: #fff; padding: 6px; border-radius: 6px; font-size: 11px; font-weight: bold; width: 100%; text-align: center; margin-top: 4px;">📲 Comprar ($4.000)</div>
+                </div>
+                <div class="skin-card pesos" data-tipo="pesos" data-skin-id="ticket_5000" onclick="abrirSelectorNumeros('Ticket $5.000', '5000', '1° Acierto: $25.000 | 2° Acierto: $10.000')">
+                    <img src="ticket_5000.png" alt="ticket $5.000">
+                    <div class="skin-title">Ticket $5.000</div>
+                    <div style="font-size: 8px; color: #aaa; margin: 2px 0; text-align: center;">1°: $25.000 | 2°: $10.000</div>
+                    <div style="background: #1f6feb; color: #fff; padding: 6px; border-radius: 6px; font-size: 11px; font-weight: bold; width: 100%; text-align: center; margin-top: 4px;">📲 Comprar ($5.000)</div>
+                </div>
+                <div class="skin-card pesos" data-tipo="pesos" data-skin-id="ticket_6500" onclick="abrirSelectorNumeros('Ticket $6.500', '6500', '1° Acierto: $35.000 | 2° Acierto: $12.000')">
+                    <img src="ticket_6500.png" alt="Ticket $6.500">
+                    <div class="skin-title">Ticket $6.500</div>
+                    <div style="font-size: 8px; color: #aaa; margin: 2px 0; text-align: center;">1°: $35.000 | 2°: $12.000</div>
+                    <div style="background: #1f6feb; color: #fff; padding: 6px; border-radius: 6px; font-size: 11px; font-weight: bold; width: 100%; text-align: center; margin-top: 4px;">📲 Comprar ($6.500)</div>
+                </div>
+                <div class="skin-card pesos" data-tipo="pesos" data-skin-id="ticket_8000" onclick="abrirSelectorNumeros('Ticket $8.000', '8000', '1° Acierto: $40.000 | 2° Acierto: $15.000')">
+                    <img src="ticket_8000.png" alt="Ticket $8.000">
+                    <div class="skin-title">Ticket $8.000</div>
+                    <div style="font-size: 8px; color: #aaa; margin: 2px 0; text-align: center;">1°: $40.000 | 2°: $15.000</div>
+                    <div style="background: #1f6feb; color: #fff; padding: 6px; border-radius: 6px; font-size: 11px; font-weight: bold; width: 100%; text-align: center; margin-top: 4px;">📲 Comprar ($8.000)</div>
+                </div>
+                <div class="skin-card pesos" data-tipo="pesos" data-skin-id="ticket_10000" onclick="abrirSelectorNumeros('Ticket $10.000', '10000', '1° Acierto: $65.000 | 2° Acierto: $18.000')">
+                    <img src="ticket_10000.png" alt="Ticket $10.000">
+                    <div class="skin-title">Ticket $10.000</div>
+                    <div style="font-size: 8px; color: #aaa; margin: 2px 0; text-align: center;">1°: $65.000 | 2°: $18.000</div>
+                    <div style="background: #1f6feb; color: #fff; padding: 6px; border-radius: 6px; font-size: 11px; font-weight: bold; width: 100%; text-align: center; margin-top: 4px;">📲 Comprar ($10.000)</div>
+                </div>
+
+                <!-- EL GAUCHO -->
+                <div class="skin-card pesos" data-tipo="pesos" data-skin-id="skin_gaucho" onclick="intentarComprarSkin('skin_gaucho', 'el gaucho argentino', 0, 25000000, '3000', event)">
+                    <img src="skin_gaucho.png" alt="el gaucho argentino">
+                    <div class="skin-title">el gaucho argentino</div>
+                    <div class="price-badge-pesos">$25 M ARS</div>
+                </div>
+
+                <!-- EL GAUCHO DE ORO -->
+                <div class="skin-card oro vip" data-tipo="oro" data-skin-id="gaucho_oro" onclick="intentarComprarSkin('gaucho_oro', 'EL GAUCHO DE ORO', 150, 0, '4470.05', event)">
+                    <img src="skin_gaucho_oro.png" alt="EL GAUCHO DE ORO">
+                    <div class="skin-title">EL GAUCHO DE ORO</div>
+                    <div class="price-badge-stars">150 ⭐</div>
+                </div>
+
+                <!-- SKINS DE PESOS ($) -->
+                <div class="skin-card pesos" data-tipo="pesos" data-skin-id="Skin_basurero" onclick="intentarComprarSkin('Skin_basurero', 'recolector martin y martin', 0, 1500000, '2000', event)">
+                    <img src="Skin_basurero.png" alt="recolector martin y martin">
+                    <div class="skin-title">recolector martin y martin</div>
+                    <div class="price-badge-pesos">$15 M ARS</div>
+                </div>
+                <div class="skin-card pesos" data-tipo="pesos" data-skin-id="skin_alumnapublica" onclick="intentarComprarSkin('skin_alumnapublica', 'luci En la escuela', 0, 500000, '500', event)">
+                    <img src="skin_alumnapublica.png" alt="luci En la escuela">
+                    <div class="skin-title">luci En la escuela</div>
+                    <div class="price-badge-pesos">$500 K ARS</div>
+                </div>
+                <div class="skin-card pesos" data-tipo="pesos" data-skin-id="skin_alumnopublico" onclick="intentarComprarSkin('skin_alumnopublico', 'estudiante BOTIN', 0, 500000, '500', event)">
+                    <img src="skin_alumnopublico.png" alt="estudiante BOTIN">
+                    <div class="skin-title">estudiante BOTIN</div>
+                    <div class="price-badge-pesos">$500 K ARS</div>
+                </div>
+                <div class="skin-card pesos" data-tipo="pesos" data-skin-id="skin_alumnaprivada" onclick="intentarComprarSkin('skin_alumnaprivada', 'luci de la siglo', 0, 1000000, '1000', event)">
+                    <img src="skin_alumnaprivada.png" alt="luci de la siglo">
+                    <div class="skin-title">luci de la siglo</div>
+                    <div class="price-badge-pesos">$1 M ARS</div>
+                </div>
+                <div class="skin-card pesos" data-tipo="pesos" data-skin-id="skin_alumnoprivado" onclick="intentarComprarSkin('skin_alumnoprivado', 'gonza estudiante', 0, 1000000, '1000', event)">
+                    <img src="skin_alumnoprivado.png" alt="gonza estudiante">
+                    <div class="skin-title">gonza estudiante</div>
+                    <div class="price-badge-pesos">$1 M ARS</div>
+                </div>
+                <div class="skin-card pesos" data-tipo="pesos" data-skin-id="skin_delivery" onclick="intentarComprarSkin('skin_delivery', 'Delivery BOTIN', 0, 10000000, '1500', event)">
+                    <img src="skin_delivery.png" alt="Delivery BOTIN">
+                    <div class="skin-title">Delivery BOTIN</div>
+                    <div class="price-badge-pesos">$10 M ARS</div>
+                </div>
+                <div class="skin-card pesos" data-tipo="pesos" data-skin-id="skin_colective" onclick="intentarComprarSkin('skin_colective', 'colectivero BOTIN', 0, 20000000, '2000', event)">
+                    <img src="Skin_colectivero.png" alt="colectivero BOTIN">
+                    <div class="skin-title">colectivero BOTIN</div>
+                    <div class="price-badge-pesos">$20 M ARS</div>
+                </div>
+                <div class="skin-card pesos" data-tipo="pesos" data-skin-id="skin_ciudadano" onclick="intentarComprarSkin('skin_ciudadano', 'el gaucho BOTIN', 0, 25000000, '2500', event)">
+                    <img src="skin_ciudadano.png" alt="el gaucho BOTIN">
+                    <div class="skin-title">el gaucho BOTIN</div>
+                    <div class="price-badge-pesos">$25 M ARS</div>
+                </div>
+                <div class="skin-card pesos" data-tipo="pesos" data-skin-id="skin_chicaurbana" onclick="intentarComprarSkin('skin_chicaurbana', 'cata urbana', 120, 0, '2500', event)">
+                    <img src="skin_chicaurbana.png" alt="cata urbana">
+                    <div class="skin-title">cata urbana</div>
+                    <div class="price-badge-stars">⭐ 120 Estrellas</div>
+                </div>
+                <div class="skin-card pesos" data-tipo="pesos" data-skin-id="skin_bombero" onclick="intentarComprarSkin('skin_bombero', 'bombero BOTIN', 120, 0, '2500', event)">
+                    <img src="skin_bombero.png" alt="bombero BOTIN">
+                    <div class="skin-title">bombero BOTIN</div>
+                    <div class="price-badge-stars">⭐ 120 Estrellas</div>
+                </div>
+                <div class="skin-card pesos" data-tipo="pesos" data-skin-id="skin_laferrere" onclick="intentarComprarSkin('skin_laferrere', 'jugador de lafe BOTIN', 0, 150000000, '3000', event)">
+                    <img src="skin_laferrere.png" alt="jugador de lafe BOTIN">
+                    <div class="skin-title">jugador de lafe BOTIN</div>
+                    <div class="price-badge-pesos">$150 M ARS</div>
+                </div>
+                <div class="skin-card pesos" data-tipo="pesos" data-skin-id="skin_almirantebrown" onclick="intentarComprarSkin('skin_almirantebrown', 'jugador pirata BOTIN', 0, 200000000, '3500', event)">
+                    <img src="skin_almirantebrown.png" alt="jugador pirata BOTIN">
+                    <div class="skin-title">jugador pirata BOTIN</div>
+                    <div class="price-badge-pesos">$200 M ARS</div>
+                </div>
+                <div class="skin-card pesos" data-tipo="pesos" data-skin-id="skin_moron" onclick="intentarComprarSkin('skin_moron', 'jugador de moron BOTIN', 0, 250000000, '4000', event)">
+                    <img src="skin_moron.png" alt="jugador de moron BOTIN">
+                    <div class="skin-title">jugador de moron BOTIN</div>
+                    <div class="price-badge-pesos">$250 M ARS</div>
+                </div>
+                <div class="skin-card pesos" data-tipo="pesos" data-skin-id="skin_boca" onclick="intentarComprarSkin('skin_boca', 'jugador de boca BOTIN', 0, 600000000, '5000', event)">
+                    <img src="skin_boca.png" alt="jugador de boca BOTIN">
+                    <div class="skin-title">jugador de boca BOTIN</div>
+                    <div class="price-badge-pesos">$600 M ARS</div>
+                </div>
+                <div class="skin-card pesos" data-tipo="pesos" data-skin-id="skin_river" onclick="intentarComprarSkin('skin_river', 'jugador de river BOTIN', 0, 600000000, '5000', event)">
+                    <img src="skin_river.png" alt="jugador de river BOTIN">
+                    <div class="skin-title">jugador de river BOTIN</div>
+                    <div class="price-badge-pesos">$600 M ARS</div>
+                </div>
+                <!-- JUGADOR ARGENTO CORREGIDO (apunta a skin_argentina2.png) -->
+                <div class="skin-card pesos" data-tipo="pesos" data-skin-id="skin_argentina2" onclick="intentarComprarSkin('skin_argentina2', 'jugador argento BOTIN', 0, 2000000000, '8000', event)">
+                    <img src="skin_argentina2.png" alt="jugador argento BOTIN">
+                    <div class="skin-title">jugador argento BOTIN</div>
+                    <div class="price-badge-pesos">$2 B ARS</div>
+                </div>
+
+                <!-- HARRY POTTER Y VOLDEMORT EN LA TIENDA -->
+                <div class="skin-card vip" data-tipo="vip" data-skin-id="skin_harrypotter" onclick="intentarComprarSkin('skin_harrypotter', 'harry potter', 120, 0, '2500', event)">
+                    <img src="skin_harrypotter.png" alt="harry potter">
+                    <div class="skin-title">harry potter</div>
+                    <div class="price-badge-stars">120 ⭐</div>
+                </div>
+                <div class="skin-card vip" data-tipo="vip" data-skin-id="skin_voldemort" onclick="intentarComprarSkin('skin_voldemort', 'voldemort', 100, 0, '2000', event)">
+                    <img src="skin_voldemort.png" alt="voldemort">
+                    <div class="skin-title">voldemort</div>
+                    <div class="price-badge-stars">100 ⭐</div>
+                </div>
+
+                <!-- BILLETES DE ORO (🪙) -->
+                <div class="skin-card oro" data-tipo="oro" data-skin-id="ciudadano_oro" onclick="intentarComprarSkin('ciudadano_oro', 'CIUDADANO ORO', 120, 0, '3576.04', event)">
+                    <img src="billete_100_oro.png" alt="BILLETE 100 ORO">
+                    <div class="skin-title">CIUDADANO ORO</div>
+                    <div class="price-badge-stars">120 ⭐</div>
+                </div>
+                <div class="skin-card oro" data-tipo="oro" data-skin-id="presidente_oro" onclick="intentarComprarSkin('presidente_oro', 'PRESIDENTE ORO', 135, 0, '4023.05', event)">
+                    <img src="billete_200_oro.png" alt="BILLETE 200 ORO">
+                    <div class="skin-title">PRESIDENTE ORO</div>
+                    <div class="price-badge-stars">135 ⭐</div>
+                </div>
+                <div class="skin-card oro" data-tipo="oro" data-skin-id="tanguero_oro" onclick="intentarComprarSkin('tanguero_oro', 'TANGUERO ORO', 200, 0, '5959.70', event)">
+                    <img src="billete_500_oro.png" alt="BILLETE 500 ORO">
+                    <div class="skin-title">TANGUERO ORO</div>
+                    <div class="price-badge-stars">200 ⭐</div>
+                </div>
+                <div class="skin-card oro" data-tipo="oro" data-skin-id="soldado_oro" onclick="intentarComprarSkin('soldado_oro', 'SOLDADO ORO', 330, 0, '9984.35', event)">
+                    <img src="billete_1000_oro.png" alt="BILLETE 1000 ORO">
+                    <div class="skin-title">SOLDADO ORO</div>
+                    <div class="price-badge-stars">330 ⭐</div>
+                </div>
+                <div class="skin-card oro" data-tipo="oro" data-skin-id="messi_oro" onclick="intentarComprarSkin('messi_oro', 'MESSI ORO', 500, 0, '15054.65', event)">
+                    <img src="billete_2000_oro.png" alt="BILLETE 2000 ORO">
+                    <div class="skin-title">MESSI ORO</div>
+                    <div class="price-badge-stars">500 ⭐</div>
+                </div>
+                <div class="skin-card oro" data-tipo="oro" data-skin-id="gaucho_oro_10k" onclick="intentarComprarSkin('gaucho_oro_10k', 'BILLETE 10000 ORO', 660, 0, '20049.74', event)">
+                    <img src="billete_10000_oro.png" alt="BILLETE 10000 ORO">
+                    <div class="skin-title">BILLETE 10000 ORO</div>
+                    <div class="price-badge-stars">660 ⭐</div>
+                </div>
+                <div class="skin-card oro" data-tipo="oro" data-skin-id="rapero_oro" onclick="intentarComprarSkin('rapero_oro', 'RAPERO ORO', 1300, 0, '39686.27', event)">
+                    <img src="billete_20000_oro.png" alt="BILLETE 20000 ORO">
+                    <div class="skin-title">RAPERO ORO</div>
+                    <div class="price-badge-stars">1300 ⭐</div>
+                </div>
+
+                <!-- SKINS VIP (⭐) -->
+                <div class="skin-card vip" data-tipo="vip" data-skin-id="skin_jeyson" onclick="intentarComprarSkin('skin_jeyson', 'jeyson', 180, 0, '1502.48', event)">
+                    <img src="skin_jeyson.png" alt="jeyson">
+                    <div class="skin-title">jeyson</div>
+                    <div class="price-badge-stars">180 ⭐</div>
+                </div>
+
+                <div class="skin-card vip" data-tipo="vip" data-skin-id="skin_scream" onclick="intentarComprarSkin('skin_scream', 'scream', 150, 0, '1502.48', event)">
+                    <img src="skin_scream.png" alt="scream">
+                    <div class="skin-title">scream</div>
+                    <div class="price-badge-stars">150 ⭐</div>
+                </div>
+
+                <div class="skin-card vip" data-tipo="vip" data-skin-id="skin_campeondelmundo" onclick="intentarComprarSkin('skin_campeondelmundo', 'BOTIN CAMPEON', 500, 0, '15000', event)">
+                    <img src="skin_campeondelmundo.png" alt="BOTIN CAMPEON">
+                    <div class="skin-title">BOTIN CAMPEON</div>
+                    <div class="price-badge-stars">500 ⭐</div>
+                </div>
+                <div class="skin-card vip" data-tipo="vip" data-skin-id="skin_fredy" onclick="intentarComprarSkin('skin_fredy', 'fredy krueger', 75, 0, '2253.71', event)">
+                    <img src="skin_fredy.png" alt="fredy krueger">
+                    <div class="skin-title">fredy krueger</div>
+                    <div class="price-badge-stars">75 ⭐</div>
+                </div>
+                <div class="skin-card vip" data-tipo="vip" data-skin-id="skin_terminator" onclick="intentarComprarSkin('skin_terminator', 'terminator', 100, 0, '3004.95', event)">
+                    <img src="skin_terminator.png" alt="terminator">
+                    <div class="skin-title">terminator</div>
+                    <div class="price-badge-stars">100 ⭐</div>
+                </div>
+                <div class="skin-card vip" data-tipo="vip" data-skin-id="skin_tiff" onclick="intentarComprarSkin('skin_tiff', 'tiff novia de chucky', 75, 0, '2253.71', event)">
+                    <img src="skin_tiff.png" alt="tiff novia de chucky">
+                    <div class="skin-title">tiff novia de chucky</div>
+                    <div class="price-badge-stars">75 ⭐</div>
+                </div>
+                <div class="skin-card vip" data-tipo="vip" data-skin-id="skin_payaso" onclick="intentarComprarSkin('skin_payaso', 'el payaso pennywise', 75, 0, '2253.71', event)">
+                    <img src="skin_payaso.png" alt="el payaso pennywise">
+                    <div class="skin-title">el payaso pennywise</div>
+                    <div class="price-badge-stars">75 ⭐</div>
+                </div>
+                <div class="skin-card vip" data-tipo="vip" data-skin-id="skin_michael" onclick="intentarComprarSkin('skin_michael', 'michael myers', 75, 0, '2253.71', event)">
+                    <img src="skin_michael.png" alt="michael myers">
+                    <div class="skin-title">michael myers</div>
+                    <div class="price-badge-stars">75 ⭐</div>
+                </div>
+                <div class="skin-card vip" data-tipo="vip" data-skin-id="skin_messi" onclick="intentarComprarSkin('skin_messi', 'messi BOTIN', 300, 0, '9089.41', event)">
+                    <img src="skin_messi.png" alt="messi BOTIN">
+                    <div class="skin-title">messi BOTIN</div>
+                    <div class="price-badge-stars">300 ⭐</div>
+                </div>
+                <div class="skin-card vip" data-tipo="vip" data-skin-id="skin_realmadrid" onclick="intentarComprarSkin('skin_realmadrid', 'BOTIN merengue', 150, 0, '4470.05', event)">
+                    <img src="skin_realmadrid.png" alt="BOTIN merengue">
+                    <div class="skin-title">BOTIN merengue</div>
+                    <div class="price-badge-stars">150 ⭐</div>
+                </div>
+                <div class="skin-card vip" data-tipo="vip" data-skin-id="skin_barcelona" onclick="intentarComprarSkin('skin_barcelona', 'BOTIN BARCELONA', 150, 0, '4470.05', event)">
+                    <img src="skin_barcelona.png" alt="BOTIN BARCELONA">
+                    <div class="skin-title">BOTIN BARCELONA</div>
+                    <div class="price-badge-stars">150 ⭐</div>
+                </div>
+                <div class="skin-card vip" data-tipo="vip" data-skin-id="skin_policia" onclick="intentarComprarSkin('skin_policia', 'policia botin', 50, 0, '1502.48', event)">
+                    <img src="skin_policia.png" alt="policia botin">
+                    <div class="skin-title">policia botin</div>
+                    <div class="price-badge-stars">50 ⭐</div>
+                </div>
+                <div class="skin-card vip" data-tipo="vip" data-skin-id="skin_doctor" onclick="intentarComprarSkin('skin_doctor', 'doctor BOTIN', 120, 0, '2500', event)">
+                    <img src="skin_doctor.png" alt="doctor BOTIN">
+                    <div class="skin-title">doctor BOTIN</div>
+                    <div class="price-badge-stars">⭐ 120 Estrellas</div>
+                </div>
+                <div class="skin-card vip" data-tipo="vip" data-skin-id="skin_doctora" onclick="intentarComprarSkin('skin_doctora', 'la doctora cata', 35, 0, '1051.73', event)">
+                    <img src="skin_doctora.png" alt="la doctora cata">
+                    <div class="skin-title">la doctora cata</div>
+                    <div class="price-badge-stars">35 ⭐</div>
+                </div>
+                <div class="skin-card vip" data-tipo="vip" data-skin-id="skin_chucky" onclick="intentarComprarSkin('skin_chucky', 'chucky', 75, 0, '2253.71', event)">
+                    <img src="skin_chucky.png" alt="chucky">
+                    <div class="skin-title">chucky</div>
+                    <div class="price-badge-stars">75 ⭐</div>
+                </div>
+                <div class="skin-card vip" data-tipo="vip" data-skin-id="skin_batman" onclick="intentarComprarSkin('skin_batman', 'batman', 100, 0, '3004.95', event)">
+                    <img src="skin_batman.png" alt="batman">
+                    <div class="skin-title">batman</div>
+                    <div class="price-badge-stars">100 ⭐</div>
+                </div>
+                <div class="skin-card vip" data-tipo="vip" data-skin-id="skin_joker" onclick="intentarComprarSkin('skin_joker', 'el joker', 100, 0, '3004.95', event)">
+                    <img src="skin_joker.png" alt="el joker">
+                    <div class="skin-title">el joker</div>
+                    <div class="price-badge-stars">100 ⭐</div>
+                </div>
+                <div class="skin-card vip" data-tipo="vip" data-skin-id="skin_superman" onclick="intentarComprarSkin('skin_superman', 'superman', 100, 0, '3004.95', event)">
+                    <img src="skin_superman.png" alt="superman">
+                    <div class="skin-title">superman</div>
+                    <div class="price-badge-stars">100 ⭐</div>
+                </div>
+                <div class="skin-card vip" data-tipo="vip" data-skin-id="skingoku4" onclick="intentarComprarSkin('skingoku4', 'goku ssj4', 150, 0, '4470.05', event)">
+                    <img src="skingoku4.png" alt="goku ssj4">
+                    <div class="skin-title">goku ssj4</div>
+                    <div class="price-badge-stars">150 ⭐</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- === PANTALLA DE GALERÍA === -->
+        <div id="screen-galeria">
+            <button class="btn-volver" onclick="cerrarPantallas()">⬅️ Volver al Juego</button>
+            <div class="galeria-header">
+                <h3>🏆 ÁLBUM DE COLECCIÓN</h3>
+                <p style="font-size: 11px; color: #8b949e;">Tus personajes y billetes desbloqueados</p>
+            </div>
+            <div class="galeria-stats">
+                <div>Desbloqueados<span id="galeria-count">1</span></div>
+                <div>Colección<span id="galeria-percent">2%</span></div>
+            </div>
+            <div class="skins-grid" id="galeria-container"></div>
+        </div>
+
+    </div>
+
+    <!-- MODAL RASPADITA -->
+    <div id="modal-raspadita" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.88); z-index: 9999; align-items: center; justify-content: center;">
+      <div style="background: #1e1e1e; color: #fff; padding: 20px; border-radius: 15px; width: 90%; max-width: 360px; text-align: center; border: 2px solid #d9534f;">
+        <h3 id="titulo-raspadita-modal" style="color: #d9534f; margin-bottom: 5px;">🎟️ RASPADITA ARGENTA</h3>
+        <p id="info-premios-raspadita" style="font-size: 11px; color: #ffcc00; margin-bottom: 12px; font-weight: bold;"></p>
+        <div style="display: flex; gap: 8px; justify-content: center; margin-bottom: 15px;">
+            <div onclick="rasparCasilla(0)" id="casilla-0" style="width: 90px; height: 90px; background: #333; border: 2px dashed #777; border-radius: 8px; display: flex; align-items: center; justify-content: center; font-size: 22px; font-weight: bold; cursor: pointer; color: #aaa;">🪙 Raspar</div>
+            <div onclick="rasparCasilla(1)" id="casilla-1" style="width: 90px; height: 90px; background: #333; border: 2px dashed #777; border-radius: 8px; display: flex; align-items: center; justify-content: center; font-size: 22px; font-weight: bold; cursor: pointer; color: #aaa;">🪙 Raspar</div>
+            <div onclick="rasparCasilla(2)" id="casilla-2" style="width: 90px; height: 90px; background: #333; border: 2px dashed #777; border-radius: 8px; display: flex; align-items: center; justify-content: center; font-size: 22px; font-weight: bold; cursor: pointer; color: #aaa;">🪙 Raspar</div>
+        </div>
+        <div id="resultado-raspadita" style="font-size: 13px; color: #ffcc00; font-weight: bold; margin-bottom: 15px; min-height: 20px;"></div>
+        <button onclick="cerrarRaspadita()" style="background: #dc3545; color: #fff; border: none; padding: 10px 18px; border-radius: 8px; font-weight: bold; cursor: pointer; width: 100%;">Cerrar / Salir</button>
+      </div>
+    </div>
+
+    <!-- MODAL SELECTOR NÚMEROS -->
+    <div id="modal-selector-numeros" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.85); z-index: 9999; align-items: center; justify-content: center;">
+      <div style="background: #1e1e1e; color: #fff; padding: 20px; border-radius: 15px; width: 90%; max-width: 360px; text-align: center; border: 2px solid #ffcc00;">
+        <h3 id="titulo-ticket-modal" style="color: #ffcc00; margin-bottom: 5px;">🎟️ COMPRAR TICKET</h3>
+        <p id="info-premios-modal" style="font-size: 11px; color: #aaa; margin-bottom: 15px;"></p>
+        <p style="font-size: 13px; color: #fff; margin-bottom: 8px;">Elige tus 2 números de la suerte (00 al 100):</p>
+        <div style="display: flex; gap: 10px; justify-content: center; margin-bottom: 15px;">
+            <input type="number" id="num-elegido-1" min="0" max="100" placeholder="Ej: 07" style="width: 70px; padding: 10px; text-align: center; font-size: 18px; border-radius: 8px; background: #111; color: #fff; border: 1px solid #444;">
+            <input type="number" id="num-elegido-2" min="0" max="100" placeholder="Ej: 77" style="width: 70px; padding: 10px; text-align: center; font-size: 18px; border-radius: 8px; background: #111; color: #fff; border: 1px solid #444;">
+        </div>
+        <div style="display: flex; gap: 10px; justify-content: center;">
+          <button onclick="confirmarCompraTicket()" style="background: #28a745; color: #fff; border: none; padding: 10px 18px; border-radius: 8px; font-weight: bold; cursor: pointer; flex: 1;">Ir a Pagar / WhatsApp</button>
+          <button onclick="cerrarSelectorNumeros()" style="background: #dc3545; color: #fff; border: none; padding: 10px 18px; border-radius: 8px; font-weight: bold; cursor: pointer; flex: 1;">Cancelar</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- MODAL ADMIN -->
+    <div id="modal-password-admin" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.85); z-index: 9999; align-items: center; justify-content: center;">
+      <div style="background: #1e1e1e; color: #fff; padding: 25px; border-radius: 15px; width: 90%; max-width: 380px; text-align: center; border: 2px solid #ff4444;">
+        <h3 style="color: #ff4444; margin-bottom: 10px;">🛡️ ACCESO DE ADMINISTRADOR</h3>
+        <input type="password" id="input-admin-pass" placeholder="Contraseña" style="width: 80%; padding: 10px; border-radius: 8px; background: #111; color: #fff; text-align: center; border: 1px solid #444; margin-bottom: 15px; font-size: 16px;">
+        <div style="display: flex; gap: 10px; justify-content: center;">
+          <button onclick="verificarPasswordAdmin()" style="background: #28a745; color: #fff; border: none; padding: 10px 18px; border-radius: 8px; font-weight: bold; cursor: pointer; flex: 1;">Aceptar</button>
+          <button onclick="cerrarModalPasswordAdmin()" style="background: #dc3545; color: #fff; border: none; padding: 10px 18px; border-radius: 8px; font-weight: bold; cursor: pointer; flex: 1;">Cancelar</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- MODAL ANUNCIOS (NUEVAS OPCIONES DE BONUS) -->
+    <div id="modal-anuncios" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.85); z-index: 9999; align-items: center; justify-content: center;">
+      <div style="background: #1e1e1e; color: #fff; padding: 20px; border-radius: 15px; width: 90%; max-width: 400px; text-align: center; border: 2px solid #ffcc00; max-height: 90vh; overflow-y: auto;">
+        <h3 style="color: #ffcc00;">🎬 RECOMPENSAS Y ANUNCIOS</h3>
+        <div class="ad-reward-box" style="background:#2d2d2d; padding:10px; border-radius:8px; margin-bottom:10px; text-align:left;">
+          <h4 style="color:#ffd700; margin:0 0 5px 0;">🌟 Recompensa Diaria (+5 Estrellas ⭐)</h4>
+          <button onclick="reclamarRecompensaDiaria()" style="background:#e3b341; color:#000; border:none; padding:8px; border-radius:6px; width:100%; font-weight:bold; cursor:pointer;">Reclamar Diario</button>
+        </div>
+        <div class="ad-reward-box" style="background:#2d2d2d; padding:10px; border-radius:8px; margin-bottom:10px; text-align:left;">
+          <h4 style="color:#28a745; margin:0 0 5px 0;">🍀 Modo Suerte Raspaditas (30s)</h4>
+          <button onclick="activarModoSuerteRaspaditas()" style="background:#28a745; color:#fff; border:none; padding:8px; border-radius:6px; width:100%; font-weight:bold; cursor:pointer;">Activar (120 ⭐)</button>
+        </div>
+        <div class="ad-reward-box" style="background:#2d2d2d; padding:10px; border-radius:8px; margin-bottom:10px; text-align:left;">
+          <h4 style="color:#00ffcc; margin:0 0 5px 0;">⚡ Clics Dobles (30 seg)</h4>
+          <button onclick="pedirConfirmacionBonus(2)" style="background:#1f6feb; color:#fff; border:none; padding:8px; border-radius:6px; width:100%; font-weight:bold; cursor:pointer;">Activar Clics Dobles</button>
+        </div>
+        <div class="ad-reward-box" style="background:#2d2d2d; padding:10px; border-radius:8px; margin-bottom:10px; text-align:left;">
+          <h4 style="color:#ffcc00; margin:0 0 5px 0;">🔥 Clics Triples (30 seg)</h4>
+          <button onclick="pedirConfirmacionBonus(3)" style="background:#d9534f; color:#fff; border:none; padding:8px; border-radius:6px; width:100%; font-weight:bold; cursor:pointer;">Activar Clics Triples</button>
+        </div>
+        <button onclick="cerrarAnuncios()" style="background: #dc3545; color: #fff; border: none; padding: 10px 20px; border-radius: 8px; font-weight: bold; cursor: pointer; margin-top: 10px;">Cerrar</button>
+      </div>
+    </div>
+
+    <!-- MODAL INFO -->
+    <div id="modal-info-general" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.88); z-index: 9999; align-items: center; justify-content: center;">
+      <div style="background: #1e1e1e; color: #fff; padding: 20px; border-radius: 15px; width: 92%; max-width: 420px; max-height: 85vh; overflow-y: auto; text-align: left; border: 2px solid #ffd700;">
+        <h3 style="color: #ffd700; text-align: center; margin-bottom: 12px;">ℹ️ INFORMACIÓN DE BOTINES</h3>
+        
+        <p style="font-size: 12px; line-height: 1.5; margin-bottom: 10px;">¡Bienvenidos à <strong>Botines: El Gran Juego 🎮 Argento</strong>, donde todo el mundo es un ganador! 🇦🇷</p>
+        
+        <p style="font-size: 11px; line-height: 1.4; color: #ddd; margin-bottom: 8px;">Habrá sorteos semanales y tickets para todos los bolsillos. ¡Es muy simple! Elegís 2 números del <strong>00 al 100</strong>: si le pegás al primero, te llevas todo el premio principal 🏆; y si no, no te preocupes, hay revancha: si le atinas al segundo, ganas un premio menor para no irte con las manos vacías 🤝.</p>
+        
+        <ul style="font-size: 11px; line-height: 1.4; color: #aaa; padding-left: 15px; margin-bottom: 10px;">
+          <li>🎟️ <strong>Ticket de $2.000:</strong> Premio principal: $10.000 😱 | Segundo premio: $4.000</li>
+          <li>🎟️ <strong>Ticket de $4.000:</strong> Premio principal: $20.000 😱 | Segundo premio: $8.000</li>
+          <li>🎟️ <strong>Ticket de $5.000:</strong> Premio principal: $25.000 😱 | Segundo premio: $10.000</li>
+          <li>🎟️ <strong>Ticket de $6.500:</strong> Premio principal: $35.000 😱 | Segundo premio: $12.000</li>
+          <li>🎟️ <strong>Ticket de $8.000:</strong> Premio principal: $40.000 😱 | Segundo premio: $15.000</li>
+          <li>🎟️ <strong>Ticket de $10.000:</strong> Premio principal: $65.000 😱 | Segundo premio: $18.000</li>
+        </ul>
+        <p style="font-size: 11px; color: #ffcc00; margin-bottom: 10px;"><em>Si queda vacante, el pozo se acumula para la próxima semana. 📈</em></p>
+
+        <h4 style="color: #00ffcc; font-size: 12px; margin: 10px 0 4px 0;">🍀 ¡Probá tu suerte con las Raspaditas!</h4>
+        <p style="font-size: 11px; color: #ddd; margin-bottom: 8px;">Podés ganar importantes premios en efectivo, estrellas para comprar skins o más raspaditas 🎟️✨:</p>
+        
+        <div style="font-size: 10px; line-height: 1.4; color: #aaa; margin-bottom: 10px;">
+          <p style="margin: 4px 0; color: #fff;"><strong>📌 Raspadita de $100 (Precio: $500):</strong></p>
+          <ul style="padding-left: 15px; margin: 2px 0 6px 0;">
+            <li>3 💰 = Ganas $1.500 😱</li>
+            <li>3 ⭐ = Ganas 75 estrellas</li>
+            <li>3 💵 = Ganas $100.000 para el pozo</li>
+          </ul>
+
+          <p style="margin: 4px 0; color: #fff;"><strong>📌 Raspadita de $200 (Precio: $1.000):</strong></p>
+          <ul style="padding-left: 15px; margin: 2px 0 6px 0;">
+            <li>3 💰 = Ganas $2.000 😱</li>
+            <li>3 ⭐ = Ganas 100 estrellas</li>
+            <li>3 💵 = Ganas $150.000 para el pozo</li>
+          </ul>
+
+          <p style="margin: 4px 0; color: #fff;"><strong>📌 Raspadita de $500 (Precio: $2.000):</strong></p>
+          <ul style="padding-left: 15px; margin: 2px 0 6px 0;">
+            <li>3 💰 = Ganas $3.000 😱</li>
+            <li>3 ⭐ = Ganas 120 estrellas</li>
+            <li>3 💵 = Ganas $250.000 para el pozo</li>
+          </ul>
+
+          <p style="margin: 4px 0; color: #fff;"><strong>📌 Raspadita de $1.000 (Precio: $3.000):</strong></p>
+          <ul style="padding-left: 15px; margin: 2px 0 6px 0;">
+            <li>3 💰 = Ganas $5.000 😱</li>
+            <li>3 ⭐ = Ganas 150 estrellas</li>
+            <li>3 💵 = Ganas $300.000 para el pozo</li>
+          </ul>
+
+          <p style="margin: 4px 0; color: #fff;"><strong>📌 Raspadita de $2.000 (Precio: $5.000):</strong></p>
+          <ul style="padding-left: 15px; margin: 2px 0 6px 0;">
+            <li>3 💰 = Ganas $7.500 😱</li>
+            <li>3 ⭐ = Ganas 170 estrellas</li>
+            <li>3 💵 = Ganas $500.000 para el pozo</li>
+          </ul>
+
+          <p style="margin: 4px 0; color: #fff;"><strong>📌 Raspadita de $10.000 (Precio: $10.000):</strong></p>
+          <ul style="padding-left: 15px; margin: 2px 0 6px 0;">
+            <li>3 💰 = Ganas $15.000 😱</li>
+            <li>3 ⭐ = Ganas 200 estrellas</li>
+            <li>3 💵 = Ganas $750.000 para el pozo</li>
+          </ul>
+
+          <p style="margin: 4px 0; color: #fff;"><strong>📌 Raspadita de $20.000 (Precio: $15.000):</strong></p>
+          <ul style="padding-left: 15px; margin: 2px 0 6px 0;">
+            <li>3 💰 = Ganas $25.000 😱</li>
+            <li>3 ⭐ = Ganas 250 estrellas</li>
+            <li>3 💵 = Ganas $1.000.000 para el pozo</li>
+          </ul>
+        </div>
+
+        <h4 style="color: #ffd700; font-size: 12px; margin: 10px 0 4px 0;">👥 ¡Sumá con referidos!</h4>
+        <p style="font-size: 11px; color: #ddd; margin-bottom: 8px;">Si invitas a alguien a jugar, te llevas <strong>10 estrellas</strong> por cada invitado. 👥</p>
+
+        <h4 style="color: #28a745; font-size: 12px; margin: 10px 0 4px 0;">💸 Retiros y Pagos:</h4>
+        <p style="font-size: 11px; color: #ddd; margin-bottom: 8px;">Podes retirar tu dinero a partir de 2000 pesos en delante. Sin bueltas ni cosas raras ..entras jugas..elejis tu producto y te lleva al link de pago directo de mercado pago. Y si ¿No tenés Mercado Pago? Podés pagar con tarjeta de débito/crédito sea la villetera virtual que tengas.. todo legal y para que vos estes tambien protejido.</p>
+
+        <h4 style="color: #ff4444; font-size: 12px; margin: 10px 0 4px 0;">📅 Sorteos:</h4>
+        <p style="font-size: 11px; color: #ddd; margin-bottom: 15px;">Se publicarán todos los domingos a las <strong>16:00 horas</strong> y se sortearán todos los tickets (dependiendo del que hayas adquirido) en vivo por el <strong>grupo de WhatsApp</strong> y el <strong>grupo de Facebook</strong>.</p>
+        
+        <p style="font-size: 11px; text-align: center; color: #ffd700; margin-bottom: 10px;">¡Gracias por elegir Botines! 🏆🇦🇷</p>
+
+        <button onclick="cerrarModalInfo()" style="background: #dc3545; color: #fff; border: none; padding: 10px; border-radius: 8px; font-weight: bold; cursor: pointer; width: 100%;">Cerrar</button>
+      </div>
+    </div>
+
+    <!-- MODAL SELECCIÓN DE FONDO POR PRESTIGIO -->
+    <div id="modal-prestigio-fondos" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.92); z-index: 9999; align-items: center; justify-content: center;">
+      <div style="background: #1e1e1e; color: #fff; padding: 20px; border-radius: 15px; width: 92%; max-width: 420px; max-height: 85vh; overflow-y: auto; text-align: center; border: 2px solid #ffd700;">
+        <h3 style="color: #ffd700; margin-bottom: 5px;">🔥 ¡GRAN REVANCHA (PRESTIGIO)! 🇦🇷</h3>
+        <p style="font-size: 11px; color: #00ffcc; margin-bottom: 12px;">¡Completaste todos los niveles! Elegí **1 (un) solo fondo de regalo** para arrancar tu nueva partida con clics potenciados (+30%) y 1.500 de energía máxima:</p>
+        
+        <div id="grid-fondos-prestigio" style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 8px; margin-bottom: 15px;">
+          <!-- Cargado por JS con tus 10 fondos nuevos -->
+        </div>
+      </div>
+    </div>
+
+    <!-- === MODAL DE REFERIDOS (NUEVO) === -->
+    <div id="modal-referidos" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.88); z-index: 9999; align-items: center; justify-content: center;">
+      <div style="background: #1e1e1e; color: #fff; padding: 20px; border-radius: 15px; width: 90%; max-width: 360px; text-align: center; border: 2px solid #00ffcc;">
+        <h3 style="color: #00ffcc; margin-bottom: 8px;">👥 SISTEMA DE REFERIDOS</h3>
+        <p style="font-size: 12px; color: #ccc; margin-bottom: 12px;">¡Invita a tus amigos y gana <strong>10 Estrellas ⭐</strong> cuando completen 300 clics y compren una skin!</p>
+        
+        <div style="margin-bottom: 12px;">
+            <p style="font-size: 11px; color: #ffd700; margin-bottom: 4px;">Tu enlace de invitado:</p>
+            <input type="text" id="input-link-referido" readonly style="width: 100%; padding: 8px; background: #111; color: #00ffcc; border: 1px solid #444; border-radius: 6px; font-size: 11px; text-align: center; margin-bottom: 8px;">
+            <button onclick="copiarLinkReferido()" style="background: #1f6feb; color: white; border: none; padding: 8px 12px; border-radius: 6px; font-weight: bold; font-size: 11px; cursor: pointer; width: 100%;">📋 Copiar Enlace</button>
+        </div>
+
+        <div style="background: #111; padding: 10px; border-radius: 8px; margin-bottom: 15px; font-size: 11px; color: #aaa;">
+            Amigos referidos unidos: <strong id="contador-referidos" style="color: #fff;">0</strong>
+        </div>
+
+        <button onclick="cerrarModalReferidos()" style="background: #dc3545; color: #fff; border: none; padding: 10px 18px; border-radius: 8px; font-weight: bold; cursor: pointer; width: 100%;">Cerrar</button>
+      </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
