@@ -1086,7 +1086,13 @@ function renderizarGaleria() {
 }
 
 function equiparSkinDesdeGaleria(skinId) {
+  if (skinId === 'skin_colective') skinId = 'skin_colectivero';
+  
   const conf = skinsConfig[skinId];
+  if (!conf) {
+    alert("⚠️ Error: No se encuentra la skin " + skinId);
+    return;
+  }
   
   if (!skinsCompradas[skinId]) {
     if (conf && conf.precioEstrellas) {
@@ -1179,6 +1185,7 @@ function comprarPaqueteEstrellas(cantidad, precioARS) {
 
 function intentarComprarSkin(skinId, nombreSkin, precioEstrellasParam, precioPesosJuegoParam, precioPesosLemonParam, event) {
   if (event) event.preventDefault();
+  if (skinId === 'skin_colective') skinId = 'skin_colectivero';
 
   try {
     if (skinsCompradas[skinId]) {
